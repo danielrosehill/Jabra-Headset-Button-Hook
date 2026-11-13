@@ -1,0 +1,22 @@
+# Disable Volume Up / Volume Down keys from the Jabra Evolve 30 II inline
+# controller. The center call button does NOT come through evdev (it's
+# captured separately via /dev/hidraw0 — see ../tools/jabra_button_listener.py),
+# but the volume keys do, and the user doesn't want them adjusting system volume.
+#
+# The mic-mute button is intentionally left functional.
+#
+# Install:
+#   sudo cp 61-jabra-evolve-30-ii.hwdb /etc/udev/hwdb.d/
+#   sudo systemd-hwdb update
+#   sudo udevadm trigger --action=change --subsystem-match=input
+#
+# Verify with:  evtest /dev/input/by-id/usb-GN_Audio_A_S_Jabra_EVOLVE_30_II_*-event-if03
+# (After install, vol+/vol- presses should produce MSC_SCAN events but no KEY_*.)
+#
+# Scancodes captured from this device:
+#   c00e9  HID Consumer 0xE9 (Volume Increment) -> KEY_VOLUMEUP
+#   c00ea  HID Consumer 0xEA (Volume Decrement) -> KEY_VOLUMEDOWN
+
+evdev:input:b0003v0B0Ep0314*
+ KEYBOARD_KEY_c00e9=reserved
+ KEYBOARD_KEY_c00ea=reserved

@@ -1,0 +1,19 @@
+[Unit]
+Description=Jabra Evolve 30 II center button -> F13 hotkey listener
+Documentation=https://github.com/danielrosehill/Jabra-Headset-Button-Hook
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/repos/github/my-repos/Jabra-Headset-Button-Hook/tools/run-listener.sh
+Restart=on-failure
+RestartSec=2
+# /dev/hidraw0 disappears when the headset is unplugged; the listener exits
+# and systemd restarts it once the device returns. Limit retries so an actual
+# bug doesn't hot-loop.
+StartLimitIntervalSec=30
+StartLimitBurst=10
+
+[Install]
+WantedBy=graphical-session.target
